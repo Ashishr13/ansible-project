@@ -1,0 +1,228 @@
+sudo apt-add-repository ppa:ansible/ansible
+apt install ansible
+ansible --version
+cd /etc
+cd ansible/
+ls
+vi hosts
+ansible 13.235.71.117 -m ping
+cd /home/ubuntu/
+cd playbooks/
+ls
+vim install_nginx.yml
+ansible-playbook install_nginx.yml
+root@ip-172-31-11-253:/home/ubuntu/playbooks# ls
+data_play.yml  install_nginx.yml
+root@ip-172-31-11-253:/home/ubuntu/playbooks# vim deploy_static_webpage.yml
+root@ip-172-31-11-253:/home/ubuntu/playbooks# vim index.html
+root@ip-172-31-11-253:/home/ubuntu/playbooks# vim /etc/ansible/hosts
+root@ip-172-31-11-253:/home/ubuntu/playbooks# ls
+data_play.yml  deploy_static_webpage.yml  index.html  install_nginx.yml
+ansible-playbook deploy_static_webpage.yml
+ansible-playbook deploy_static_webpage.yml
+
+
+Content inside file = /etc/ansible/hosts
+[servers]
+server_1 ansible_host=13.235.71.117
+
+[prd]
+server_2 ansible_host=43.204.145.53
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/ubuntu/keys/test-keypair.pem
+
+content under /home/ubuntu/ = keys, playbooks
+keys = to store keys.pem of hosts servers
+plabooks = 
+data_play.yml  deploy_static_webpage.yml  index.html  install_nginx.yml
+
+root@ip-172-31-11-253:/home/ubuntu/playbooks# cat data_play.yml
+-
+ name: Date Playbook
+ hosts: servers
+ tasks:
+  - name: Show date
+    command: date
+
+root@ip-172-31-11-253:/home/ubuntu/playbooks# cat data_play.yml
+-
+ name: Date Playbook
+ hosts: servers
+ tasks:
+  - name: Show date
+    command: date
+
+root@ip-172-31-11-253:/home/ubuntu/playbooks# cat deploy_static_webpage.yml
+-
+  name: Install nginx and serve static website
+  hosts: prd
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+    - name: Start nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    - name: Deploy web page
+      copy:
+        src: index.html
+        dest: /var/www/html
+
+
+cat index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Static Page</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        /* Header styles */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        /* Navigation styles */
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: #333;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+            color: #fff;
+        }
+        /* Main content styles */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .card-content h3 {
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .card-content p {
+            margin-bottom: 0;
+            color: #666;
+        }
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cool Static Page</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <main class="main-content">
+            <!-- Sample cards for featured content -->
+            <div class="card">
+                <img src="https://via.placeholder.com/400x200" alt="Placeholder Image">
+                <div class="card-content">
+                    <h3>Featured Item 1</h3>
+                    <p>Description of the featured item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/400x200" alt="Placeholder Image">
+                <div class="card-content">
+                    <h3>Featured Item 2</h3>
+                    <p>Description of the featured item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/400x200" alt="Placeholder Image">
+                <div class="card-content">
+                    <h3>Featured Item 3</h3>
+                    <p>Description of the featured item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/400x200" alt="Placeholder Image">
+                <div class="card-content">
+                    <h3>Featured Item 4</h3>
+                    <p>Description of the featured item. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <p>&copy; 2024 Cool Company. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+
+
